@@ -1,0 +1,34 @@
+questions:
+  - message: Application name
+    name: "application_name"
+    type: input
+    regexp: ^[a-z0-9\-]+$
+    help_msg: Must be lowercase characters or digits or hyphens.
+
+  - message: GitHub repository owner
+    name: "github_owner"
+    type: input
+    regexp: ^[a-zA-Z0-9\-_]*$
+    help_msg: Enter name of the GitHub organisation where repository should be created or your username to create repository under your personal account.
+
+  - message: Docker Username
+    name: "docker_username"
+    type: input
+    help_msg: Enter name docker username, it will be used in CI/CD pipeline to upload docker image
+
+  - message: Docker Password
+    name: "docker_password"
+    type: input
+    help_msg: Enter name docker password, it will be used in CI/CD pipeline to upload docker image
+
+tasks:
+  - command: [ "go-starter-replace" ]
+  - command: [ "go-starter-github", "$github_owner", "$application_name" ]
+  - command:
+    - "go-starter-drone"
+    - "https://cloud.drone.io"
+    - "$github_owner"
+    - "$application_name"
+    - "-secret-literal=docker_username=$docker_username"
+    - "-secret-literal=docker_password=$docker_password"
+  - command: [ "rm", ".starter.yml" ]
