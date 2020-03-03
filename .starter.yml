@@ -23,12 +23,16 @@ questions:
 
 tasks:
   - command: [ "go-starter-replace" ]
-  - command: [ "go-starter-github", "$github_owner", "$application_name" ]
+  - command:
+    - "go-starter-github"
+    - "-public" # otherwise free version of drone won't recognize repository
+    - "$github_owner"
+    - "$application_name"
   - command:
     - "go-starter-drone"
+    - "-secret-literal=docker_username=$docker_username"
+    - "-secret-literal=docker_password=$docker_password"
     - "https://cloud.drone.io"
     - "$github_owner"
     - "$application_name"
-    - "-secret-literal=docker_username=$docker_username"
-    - "-secret-literal=docker_password=$docker_password"
   - command: [ "rm", ".starter.yml" ]
